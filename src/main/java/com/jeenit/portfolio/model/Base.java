@@ -1,9 +1,7 @@
 package com.jeenit.portfolio.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,14 +16,15 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+public class Base {
     // Make "By" fields reference the admin entity
     @CreatedDate
     @Column(updatable = false)
     @JsonIgnore
     private LocalDateTime createdAt;
     @CreatedBy
-    @Column(updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)  // Many records can be modified by one Admin
+    @JoinColumn(name = "created_by")
     @JsonIgnore
     private Admin createdBy;
 
@@ -34,7 +33,8 @@ public class BaseEntity {
     @JsonIgnore
     private LocalDateTime modifiedAt;
     @LastModifiedBy
-    @Column(insertable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "modified_by")
     @JsonIgnore
     private Admin modifiedBy;
 }
