@@ -11,8 +11,12 @@ import java.util.List;
 @Slf4j
 @Service
 public class ProjectService {
+    final ProjectRepository projectRepository;
+
     @Autowired
-    ProjectRepository projectRepository;
+    public ProjectService(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
+    }
 
     public List<Project> getAllProjects() {
         List<Project> projects = projectRepository.findAll();

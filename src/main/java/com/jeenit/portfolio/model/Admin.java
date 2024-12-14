@@ -14,6 +14,7 @@ public class Admin extends Base {
     private int id;
 
     @NotBlank
+    @Column(unique = true)
     private String name;
 
     @NotBlank

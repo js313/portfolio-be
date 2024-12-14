@@ -14,8 +14,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {
+    final ProjectService projectService;
+
     @Autowired
-    ProjectService projectService;
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     @GetMapping("")
     public ResponseEntity<List<Project>> getProjects(@RequestParam(required = false) String type) {
