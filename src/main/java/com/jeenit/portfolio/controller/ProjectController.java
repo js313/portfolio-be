@@ -2,9 +2,12 @@ package com.jeenit.portfolio.controller;
 
 import com.jeenit.portfolio.model.Project;
 import com.jeenit.portfolio.service.ProjectService;
+import com.jeenit.portfolio.service.ProjectTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ public class ProjectController {
     final ProjectService projectService;
 
     @Autowired
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, ProjectTypeService projectTypeService) {
         this.projectService = projectService;
     }
 
@@ -38,5 +41,15 @@ public class ProjectController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(project);
+    }
+
+    @PostMapping("")
+    public ResponseEntity<Project> createNewProject(@RequestBody Project project) {
+        try {
+            project = projectService.createNewProject(project);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(project);
     }
 }

@@ -5,6 +5,7 @@ import com.jeenit.portfolio.repository.AdminRepository;
 import com.jeenit.portfolio.util.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +23,17 @@ public class AuthService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    Admin getAdminByName(String name) {
-        return adminRepository.findByName(name).orElse(null);
-    }
-
     public String login(String name, String password) throws RuntimeException {
-        Admin admin = getAdminByName(name);
+        Admin admin = adminRepository.findByName(name).orElse(null);
         if (admin != null && name.equals(admin.getName()) && passwordEncoder.matches(password, admin.getPassword())) {
             return jwtTokenUtil.generateToken(name);
         }
-        throw new RuntimeException("Invalid credentials");
+        throw new BadCredentialsException("Invalid credentials");
+    }
+
+    public String signup(Admin admin) {
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        Admin newAdmin = adminRepository.save(admin);
+        return jwtTokenUtil.generateToken(newAdmin.getName());
     }
 }

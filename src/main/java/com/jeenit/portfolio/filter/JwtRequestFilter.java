@@ -1,11 +1,14 @@
 package com.jeenit.portfolio.filter;
 
+import com.jeenit.portfolio.model.Admin;
+import com.jeenit.portfolio.repository.AdminRepository;
 import com.jeenit.portfolio.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -17,28 +20,38 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     final JwtTokenUtil jwtTokenUtil;
+    final AdminRepository adminRepository;
 
     @Autowired
-    public JwtRequestFilter(JwtTokenUtil jwtTokenUtil) {
+    public JwtRequestFilter(JwtTokenUtil jwtTokenUtil, AdminRepository adminRepository) {
         this.jwtTokenUtil = jwtTokenUtil;
+        this.adminRepository = adminRepository;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
 
-        String username = null;
+        String name = null;
         String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtTokenUtil.extractUsername(jwt);
+            name = jwtTokenUtil.extractName(jwt);
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if (jwtTokenUtil.validateToken(jwt, username)) {
-                SecurityContextHolder.getContext().setAuthentication(
-                        (Authentication) new WebAuthenticationDetailsSource().buildDetails(request));
+        if (name != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (jwtTokenUtil.validateToken(jwt, name)) {
+                Admin admin = adminRepository.findByName(name).orElse(null);
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(
+                                admin,
+                                null,
+                                null
+                        );
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
         filterChain.doFilter(request, response);

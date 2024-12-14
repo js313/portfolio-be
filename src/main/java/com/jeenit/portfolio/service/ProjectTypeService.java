@@ -21,4 +21,8 @@ public class ProjectTypeService {
     public List<ProjectType> getAllProjectTypes() {
         return projectTypeRepository.findAll();
     }
+
+    public ProjectType getProjectType(int id) {
+        return projectTypeRepository.findById(id).orElse(null);
+    }
 }

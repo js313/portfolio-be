@@ -4,7 +4,9 @@ import com.jeenit.portfolio.model.Admin;
 import com.jeenit.portfolio.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -28,8 +30,20 @@ public class AuthController {
         try {
             String token = authService.login(name, password);
             responseBody.put("token", token);
-        } catch(RuntimeException e) {
-            return ResponseEntity.status(401).build();
+        } catch(BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<Map<String, String>> signup(@RequestBody Admin admin) {
+        Map<String, String> responseBody = new HashMap<>();
+        try {
+            String token = authService.signup(admin);
+            responseBody.put("token", token);
+        } catch(BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(responseBody);
     }
