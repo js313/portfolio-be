@@ -17,17 +17,17 @@ public class Project extends Base {
     @NotBlank
     private String name;
 
-    private String image; // Optional: URL of the project image
+    private String image;
 
-    @Column(length = 1000) // In case of long descriptions
+    @Column(length = 1000)
     private String description;
 
     @NotBlank
     private String githubLink;
 
-    private String itchIoLink; // Optional: Link to itch.io
+    private String itchIoLink;
 
-    private String projectLink; // Optional: Link to hosted project
+    private String projectLink;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id", nullable = false)

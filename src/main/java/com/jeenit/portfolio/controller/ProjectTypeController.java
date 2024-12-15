@@ -4,11 +4,11 @@ import com.jeenit.portfolio.model.ProjectType;
 import com.jeenit.portfolio.service.ProjectTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Slf4j
@@ -25,5 +25,11 @@ public class ProjectTypeController {
     @GetMapping("")
     public ResponseEntity<List<ProjectType>> getAllProjectTypes() {
         return ResponseEntity.ok(projectTypeService.getAllProjectTypes());
+    }
+
+    @PostMapping("")
+    public ResponseEntity<ProjectType> createNewProjectType(@RequestBody ProjectType projectType) throws SQLIntegrityConstraintViolationException {
+        ProjectType newProjectType = projectTypeService.createNewProjectType(projectType);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newProjectType);
     }
 }

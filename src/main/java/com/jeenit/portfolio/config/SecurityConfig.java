@@ -28,8 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(httpRequest ->
                         httpRequest
                                 .requestMatchers("/api/auth/login").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/projects/**").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/api/projects-types/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/project-types/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(sessionManagementConfigurer ->
                         sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
