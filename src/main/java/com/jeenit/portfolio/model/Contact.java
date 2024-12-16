@@ -1,23 +1,26 @@
 package com.jeenit.portfolio.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-public class Admin extends Base {
+public class Contact extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotBlank
-    @Column(unique = true)
     private String name;
 
     @NotBlank
-    private String password;
+    @Column(unique = true)
+    @Email
+    private String email;
+
+    @NotBlank
+    private String message;
 }

@@ -1,13 +1,14 @@
 package com.jeenit.portfolio.controller;
 
+import com.jeenit.portfolio.dto.ProjectDTO;
 import com.jeenit.portfolio.model.Project;
 import com.jeenit.portfolio.service.ProjectService;
 import com.jeenit.portfolio.service.ProjectTypeService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -44,7 +45,8 @@ public class ProjectController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Project> createNewProject(@RequestBody Project project) {
+    public ResponseEntity<Project> createNewProject(@RequestBody @Valid ProjectDTO projectDTO) {
+        Project project = projectDTO.toEntity();
         try {
             project = projectService.createNewProject(project);
         } catch (IllegalArgumentException e) {

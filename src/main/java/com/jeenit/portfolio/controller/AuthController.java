@@ -1,7 +1,9 @@
 package com.jeenit.portfolio.controller;
 
+import com.jeenit.portfolio.dto.AuthDTO;
 import com.jeenit.portfolio.model.Admin;
 import com.jeenit.portfolio.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +26,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody Admin admin) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid AuthDTO authDTO) {
+        System.out.println(authDTO);
+        Admin admin = authDTO.toEntity();
         String name = admin.getName(), password = admin.getPassword();
         Map<String, String> responseBody = new HashMap<>();
         try {
@@ -37,7 +41,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> signup(@RequestBody Admin admin) {
+    public ResponseEntity<Map<String, String>> signup(@RequestBody @Valid AuthDTO authDTO) {
+        Admin admin = authDTO.toEntity();
         Map<String, String> responseBody = new HashMap<>();
         try {
             String token = authService.signup(admin);

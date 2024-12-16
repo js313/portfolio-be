@@ -17,6 +17,7 @@ public class BaseEntityAuditAware implements AuditorAware<Admin> {
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
+                .filter(principal -> principal instanceof Admin)
                 .map(Admin.class::cast);
     }
 }

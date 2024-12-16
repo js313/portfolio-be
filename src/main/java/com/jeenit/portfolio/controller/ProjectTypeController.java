@@ -1,7 +1,9 @@
 package com.jeenit.portfolio.controller;
 
+import com.jeenit.portfolio.dto.ProjectTypeDTO;
 import com.jeenit.portfolio.model.ProjectType;
 import com.jeenit.portfolio.service.ProjectTypeService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,8 @@ public class ProjectTypeController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ProjectType> createNewProjectType(@RequestBody ProjectType projectType) throws SQLIntegrityConstraintViolationException {
+    public ResponseEntity<ProjectType> createNewProjectType(@RequestBody @Valid ProjectTypeDTO projectTypeDTO) throws SQLIntegrityConstraintViolationException {
+        ProjectType projectType = projectTypeDTO.toEntity();
         ProjectType newProjectType = projectTypeService.createNewProjectType(projectType);
         return ResponseEntity.status(HttpStatus.CREATED).body(newProjectType);
     }

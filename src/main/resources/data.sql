@@ -1,9 +1,11 @@
 -- Insert initial data only if no rows exist
+-- Admin
 INSERT INTO admin (name, password, created_by, modified_by)
 SELECT 'Jeenit', '$2a$12$9wBxfeEmi3d1OaTf3spyR.62mGjybTareZaPm1fG4lMJcsbmDg9I6', NULL, NULL
 WHERE NOT EXISTS (SELECT 1 FROM admin WHERE name = 'Jeenit');
 
 -- Insert initial project types with display names
+-- Project Types
 INSERT INTO project_type (name, display_name)
 SELECT 'web', 'Web Projects'
 WHERE NOT EXISTS (SELECT 1 FROM project_type WHERE name = 'web');
@@ -56,3 +58,9 @@ WHERE NOT EXISTS (SELECT 1 FROM project WHERE name = 'Creative Coding Art');
 INSERT INTO project (name, description, image, github_link, itch_io_link, project_link, type_id)
 SELECT 'Task Manager App', 'A task manager app to organize and track personal tasks.', 'task_manager.jpg', 'https://github.com/jeenit/task-manager', NULL, 'https://jeenit.com/task-manager', 1
 WHERE NOT EXISTS (SELECT 1 FROM project WHERE name = 'Task Manager App');
+
+-- Contact Messages
+INSERT IGNORE INTO contact (name, email, message)
+VALUES
+('John Doe', 'john@example.com', 'Hello, I am interested in your projects.'),
+('Jane Smith', 'jane@example.com', 'I would like to collaborate on a web project.');
