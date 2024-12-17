@@ -22,11 +22,15 @@ public class SecurityConfig {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
+    // Need to allow OPTIONS request, as browser sends it before every POST, PUT, etc. requests(sometimes GET too)
+    // And based on the response headers of that it sets the request headers on the subsequent
+    // request, and CORS needs the headers to verify the origin.
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(httpRequest ->
                         httpRequest
+                                .requestMatchers(HttpMethod.OPTIONS, "/api/contact").permitAll()
                                 .requestMatchers("/api/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/project-types/**").permitAll()
