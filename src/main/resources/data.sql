@@ -1,7 +1,7 @@
 -- Insert initial data only if no rows exist
 -- Admin
 INSERT INTO admin (name, password, created_by, modified_by)
-SELECT 'Jeenit', '$2a$12$9wBxfeEmi3d1OaTf3spyR.62mGjybTareZaPm1fG4lMJcsbmDg9I6', NULL, NULL
+SELECT 'Jeenit', '$2a$12$jvNGWQt2D6uXr1.mKY7xme/YuP1JLHF3D71JbmDuOo/Wjb0xVY5re', NULL, NULL
 WHERE NOT EXISTS (SELECT 1 FROM admin WHERE name = 'Jeenit');
 
 -- Insert initial project types with display names

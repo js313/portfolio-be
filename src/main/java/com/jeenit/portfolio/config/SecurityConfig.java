@@ -31,10 +31,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(httpRequest ->
                         httpRequest
                                 .requestMatchers(HttpMethod.OPTIONS, "/api/contact").permitAll()
-                                .requestMatchers("/api/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/projects/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/project-types/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/contact/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/resume/download").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(sessionManagementConfigurer ->
                         sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
