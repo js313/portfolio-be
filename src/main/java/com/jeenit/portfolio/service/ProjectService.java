@@ -4,10 +4,15 @@ import com.jeenit.portfolio.model.Project;
 import com.jeenit.portfolio.model.ProjectType;
 import com.jeenit.portfolio.repository.ProjectRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -77,4 +82,35 @@ public class ProjectService {
         return projectRepository.save(existingProject);
     }
 
+    private String convertToRawGithubUrl(String githubUrl) {
+        // Assuming branch name will be main
+        return githubUrl.replace("github.com", "raw.githubusercontent.com")
+                .replace("/tree/", "/") + "/main/sketch.js";
+    }
+
+    private String fetchSketchJs(String rawUrl) {
+        String response = null;
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpGet request = new HttpGet(rawUrl);
+            response = httpClient.execute(request, new BasicHttpClientResponseHandler());
+        } catch (IOException e) {
+            log.error("{} {}", rawUrl, e.getMessage());
+        }
+        return response;
+    }
+
+    public String getP5SketchFile(int projectId) {
+        Project project = getProjectById(projectId);
+        if (project == null || !project.isP5Sketch()) {
+            return null;
+        }
+
+        String githubUrl = project.getGithubLink();
+        if(!githubUrl.contains("github.com")) {
+            return null;
+        }
+
+        String rawGithubUrl = convertToRawGithubUrl(githubUrl);
+        return fetchSketchJs(rawGithubUrl);
+    }
 }

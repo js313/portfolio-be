@@ -44,6 +44,15 @@ public class ProjectController {
         return ResponseEntity.ok(project);
     }
 
+    @GetMapping("/{id}/p5sketch")
+    public ResponseEntity<String> getP5SketchFile(@PathVariable int id) {
+        String sketchContent = projectService.getP5SketchFile(id);
+        if(sketchContent == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(sketchContent);
+    }
+
     @PostMapping("")
     public ResponseEntity<Project> createNewProject(@RequestBody @Valid ProjectDTO projectDTO) {
         Project project = projectDTO.toEntity();
