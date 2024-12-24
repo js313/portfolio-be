@@ -33,4 +33,25 @@ public class ProjectTypeService {
         }
         return projectTypeRepository.save(projectType);
     }
+
+    public ProjectType updateProjectType(int id, ProjectType newProjectType) {
+        ProjectType existingProjectType = getProjectType(id);
+
+        if (newProjectType.getName() != null && !newProjectType.getName().equals(existingProjectType.getName())) {
+            if (projectTypeRepository.existsByName(newProjectType.getName())) {
+                throw new EntityExistsException("Project Type with name: '" + newProjectType.getName() + "' already exists.");
+            }
+            existingProjectType.setName(newProjectType.getName());
+        }
+
+        if (newProjectType.getDisplayName() != null) {
+            existingProjectType.setDisplayName(newProjectType.getDisplayName());
+        }
+
+        if (newProjectType.getPriority() != 0) { // Check to ensure valid non-default integer value
+            existingProjectType.setPriority(newProjectType.getPriority());
+        }
+
+        return projectTypeRepository.save(existingProjectType);
+    }
 }

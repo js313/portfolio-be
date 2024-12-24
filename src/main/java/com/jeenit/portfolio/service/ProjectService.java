@@ -5,6 +5,7 @@ import com.jeenit.portfolio.model.ProjectType;
 import com.jeenit.portfolio.repository.ProjectRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,12 +23,11 @@ public class ProjectService {
     }
 
     public List<Project> getAllProjects() {
-        List<Project> projects = projectRepository.findAll();
-        return projectRepository.findAll();
+        return projectRepository.findAll(Sort.by(Sort.Order.desc("highlight"), Sort.Order.desc("type.priority")));
     }
 
     public List<Project> getProjectsByType(String type) {
-        return projectRepository.findByTypeName(type);
+        return projectRepository.findByTypeName(type, Sort.by(Sort.Order.desc("highlight"), Sort.Order.desc("type.priority")));
     }
 
     public Project getProjectById(int id) {
@@ -42,4 +42,39 @@ public class ProjectService {
         project.setType(projectType);
         return projectRepository.save(project);
     }
+
+    public Project updateProjectPartial(int id, Project newProjectData) {
+        Project existingProject = getProjectById(id);
+        if (existingProject == null) {
+            throw new IllegalArgumentException("Project not found with ID: " + id);
+        }
+
+        if (newProjectData.getName() != null) {
+            existingProject.setName(newProjectData.getName());
+        }
+        if (newProjectData.getImage() != null) {
+            existingProject.setImage(newProjectData.getImage());
+        }
+        if (newProjectData.getDescription() != null) {
+            existingProject.setDescription(newProjectData.getDescription());
+        }
+        if (newProjectData.getGithubLink() != null) {
+            existingProject.setGithubLink(newProjectData.getGithubLink());
+        }
+        if (newProjectData.getItchIoLink() != null) {
+            existingProject.setItchIoLink(newProjectData.getItchIoLink());
+        }
+        if (newProjectData.getProjectLink() != null) {
+            existingProject.setProjectLink(newProjectData.getProjectLink());
+        }
+        if (newProjectData.getType() != null) {
+            existingProject.setType(newProjectData.getType());
+        }
+
+        existingProject.setHighlight(newProjectData.isHighlight());
+        existingProject.setP5Sketch(newProjectData.isP5Sketch());
+
+        return projectRepository.save(existingProject);
+    }
+
 }

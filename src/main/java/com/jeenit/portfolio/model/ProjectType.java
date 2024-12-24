@@ -2,6 +2,7 @@ package com.jeenit.portfolio.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,4 +22,7 @@ public class ProjectType extends Base {
 
     @NotBlank
     private String displayName;
+
+    @NotNull
+    private int priority;
 }

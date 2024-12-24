@@ -27,7 +27,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody @Valid AuthDTO authDTO) {
-        System.out.println(authDTO);
         Admin admin = authDTO.toEntity();
         String name = admin.getName(), password = admin.getPassword();
         Map<String, String> responseBody = new HashMap<>();

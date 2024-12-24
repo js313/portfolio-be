@@ -20,11 +20,14 @@ public class ProjectTypeDTO implements DTO<ProjectType> {
     @Size(max = 255, message = "display name too long")
     private String displayName;
 
+    private int priority;
+
     @Override
     public ProjectType toEntity() {
         ProjectType projectType = new ProjectType();
         projectType.setName(this.name);
         projectType.setDisplayName(this.displayName);
+        projectType.setPriority(this.priority);
         return projectType;
     }
 }

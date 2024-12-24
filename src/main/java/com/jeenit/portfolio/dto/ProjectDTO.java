@@ -26,6 +26,10 @@ public class ProjectDTO implements DTO<Project> {
 
     private String projectLink;
 
+    private boolean highlight;
+
+    private boolean p5Sketch;
+
     @NotNull
     private ProjectType type;
 
@@ -39,6 +43,8 @@ public class ProjectDTO implements DTO<Project> {
         project.setItchIoLink(this.itchIoLink);
         project.setProjectLink(this.projectLink);
         project.setType(this.type);
+        project.setHighlight(this.highlight);
+        project.setP5Sketch(this.p5Sketch);
 
         return project;
     }

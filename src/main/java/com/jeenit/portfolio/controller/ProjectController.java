@@ -54,4 +54,17 @@ public class ProjectController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(project);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Project> patchProject(@PathVariable int id, @RequestBody ProjectDTO projectDTO) {
+        try {
+            Project newProjectData = projectDTO.toEntity();
+            Project updatedProject = projectService.updateProjectPartial(id, newProjectData);
+            return ResponseEntity.ok(updatedProject);
+        } catch (IllegalArgumentException e) {
+            log.error("Error updating project with ID {}: {}", id, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
 }
