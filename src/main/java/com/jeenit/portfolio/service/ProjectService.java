@@ -82,13 +82,13 @@ public class ProjectService {
         return projectRepository.save(existingProject);
     }
 
-    private String convertToRawGithubUrl(String githubUrl) {
-        // Assuming branch name will be main
+    private String constructRawGithubUrl(String githubUrl) {
         return githubUrl.replace("github.com", "raw.githubusercontent.com")
-                .replace("/tree/", "/") + "/main/sketch.js";
+                .replace("/tree/", "/")
+                + "/build/index.min.js";
     }
 
-    private String fetchSketchJs(String rawUrl) {
+    private String fetchIndexMinJs(String rawUrl) {
         String response = null;
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet request = new HttpGet(rawUrl);
@@ -110,7 +110,7 @@ public class ProjectService {
             return null;
         }
 
-        String rawGithubUrl = convertToRawGithubUrl(githubUrl);
-        return fetchSketchJs(rawGithubUrl);
+        String rawGithubUrl = constructRawGithubUrl(githubUrl);
+        return fetchIndexMinJs(rawGithubUrl);
     }
 }

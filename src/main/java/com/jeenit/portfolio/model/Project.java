@@ -32,6 +32,7 @@ public class Project extends Base {
 
     private boolean highlight;
 
+    @Column(name = "p5_sketch")
     private boolean p5Sketch;
 
     @ManyToOne(fetch = FetchType.EAGER)
