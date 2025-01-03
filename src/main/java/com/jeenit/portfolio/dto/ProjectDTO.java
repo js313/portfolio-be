@@ -44,7 +44,7 @@ public class ProjectDTO implements DTO<Project> {
         project.setProjectLink(this.projectLink);
         project.setType(this.type);
         project.setHighlight(this.highlight);
-        project.setP5Sketch(this.p5Sketch);
+        project.setSupportsRendering(this.p5Sketch);
 
         return project;
     }

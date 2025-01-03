@@ -30,10 +30,9 @@ public class Project extends Base {
 
     private String projectLink;
 
-    private boolean highlight;
+    private Boolean highlight;
 
-    @Column(name = "p5_sketch")
-    private boolean p5Sketch;
+    private Boolean supportsRendering;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id", nullable = false)

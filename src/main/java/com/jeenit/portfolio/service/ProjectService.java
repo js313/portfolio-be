@@ -39,16 +39,23 @@ public class ProjectService {
         return projectRepository.findById(id).orElse(null);
     }
 
+    public void validateProject(Project project) {
+        if (project.getSupportsRendering() && project.getProjectLink() != null) {
+            throw new IllegalArgumentException("If supportsRendering is true, projectLink must be null.");
+        }
+    }
+
     public Project createNewProject(Project project) throws IllegalArgumentException {
         ProjectType projectType = projectTypeService.getProjectType(project.getType().getId());
         if(projectType == null) {
             throw new IllegalArgumentException("Project Type not Found");
         }
+        validateProject(project);
         project.setType(projectType);
         return projectRepository.save(project);
     }
 
-    public Project updateProjectPartial(int id, Project newProjectData) {
+    public Project updateProjectPartial(int id, Project newProjectData) throws IllegalArgumentException {
         Project existingProject = getProjectById(id);
         if (existingProject == null) {
             throw new IllegalArgumentException("Project not found with ID: " + id);
@@ -75,10 +82,14 @@ public class ProjectService {
         if (newProjectData.getType() != null) {
             existingProject.setType(newProjectData.getType());
         }
+        if (newProjectData.getHighlight() != null) {
+            existingProject.setHighlight(newProjectData.getHighlight());
+        }
+        if (newProjectData.getSupportsRendering() != null) {
+            existingProject.setSupportsRendering(newProjectData.getSupportsRendering());
+        }
 
-        existingProject.setHighlight(newProjectData.isHighlight());
-        existingProject.setP5Sketch(newProjectData.isP5Sketch());
-
+        validateProject(existingProject);
         return projectRepository.save(existingProject);
     }
 
@@ -101,7 +112,7 @@ public class ProjectService {
 
     public String getP5SketchFile(int projectId) {
         Project project = getProjectById(projectId);
-        if (project == null || !project.isP5Sketch()) {
+        if (project == null || !project.getSupportsRendering()) {
             return null;
         }
 

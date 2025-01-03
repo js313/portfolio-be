@@ -45,7 +45,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/p5sketch")
-    public ResponseEntity<String> getP5SketchFile(@PathVariable int id) {
+    public ResponseEntity<String> getP5SketchFile(@PathVariable int id) throws InterruptedException {
         String sketchContent = projectService.getP5SketchFile(id);
         if(sketchContent == null) {
             return ResponseEntity.notFound().build();
