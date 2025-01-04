@@ -1,9 +1,9 @@
 package com.jeenit.portfolio.util;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -11,21 +11,22 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
-    private final Dotenv dotenv = Dotenv.load();
+    @Value("${SECRET_KEY}") // Takes these from application.properties
+    private String secretKey;
+
+    @Value("${EXPIRATION_TIME}")
+    private long expirationTime;
 
     private SecretKey getKey() {
-        String SECRET_KEY = dotenv.get("SECRET_KEY");
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(String name) {
-        // 1 day in milliseconds
-        long EXPIRATION_TIME = Long.parseLong(dotenv.get("EXPIRATION_TIME"));
         return Jwts.builder()
                 .subject(name)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getKey())
                 .compact();
     }

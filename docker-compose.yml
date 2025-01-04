@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Takes these from .env file
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - app-network
+    ports:
+      - "3306:3306"  # Exposes MySQL port on localhost
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "--host", "localhost" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 20s
+
+  springboot-app:
+    build: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/portfolio
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      EXPIRATION_TIME: ${EXPIRATION_TIME}
+      FIRST_ADMIN_PASSWORD: ${FIRST_ADMIN_PASSWORD} # Key name can be anything
+    networks:
+      - app-network
+    ports:
+      - "8080:8080"  # Exposes Spring Boot application on localhost
+    depends_on:
+      mysql:  # Ensures MySQL is started before the Spring Boot app
+        condition: service_healthy
+
+networks:
+  app-network:
+    driver: bridge

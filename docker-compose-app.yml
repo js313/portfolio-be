@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  springboot-app:
+    build: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/portfolio
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      EXPIRATION_TIME: ${EXPIRATION_TIME}
+      FIRST_ADMIN_PASSWORD: ${FIRST_ADMIN_PASSWORD} # Key name can be anything
+    networks:
+      - app-network
+    ports:
+      - "8080:8080"  # Exposes Spring Boot application on localhost
+
+networks:
+  app-network:
+    driver: bridge
