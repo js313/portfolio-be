@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:8
+    image: mysql
+    platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Takes these from .env file
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -21,8 +22,9 @@ services:
 
   springboot-app:
     build: .
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/portfolio
+    platform: linux/amd64
+    environment:  # When deploying provide these as environment variables
+      SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
