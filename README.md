@@ -8,13 +8,12 @@ This repository contains the backend services for my portfolio website. It handl
 - **Database Integration:** Uses MySQL for storing project data, contact messages, and other dynamic content.
 - **Secure Admin Access:** Admin routes are protected to ensure only authorized changes are made.
 - **Asynchronous Operations:** Efficient handling of multiple requests with Java's concurrency features.
-- **CI/CD Pipeline:** Automatic deployment of the backend to AWS whenever changes are pushed to the main branch.
 
 ## Technologies Used
 - **Language:** Java
 - **Framework:** Spring Boot
 - **Database:** MySQL
-- **Other Tools:** JDBC, Maven, AWS
+- **Other Tools:** JDBC, Maven
 
 ## Installation
 
@@ -68,11 +67,16 @@ To set up this project locally:
 ## API Endpoints
 ### Public Endpoints
 - GET /api/projects - Fetch the list of projects.
+- GET /api/project-types - Fetch the list of project types.
 - GET /api/resume - Fetch the resume data.
+- GET /api/p5-sketch/{id} - Fetch the built sketch by id from github `p5-sketches` mono repo.
 ### Admin Endpoints
 - POST /api/projects - Add a new project.
 - PUT /api/projects/{id} - Update an existing project.
 - DELETE /api/projects/{id} - Delete a project.
+- POST /api/project-types - Add a new project type.
+- PUT /api/project-types/{id} - Update an existing project type.
+- DELETE /api/project-types/{id} - Delete a project type.
 ### Contact Form
 - POST /api/contact - Submit a contact message.
 
