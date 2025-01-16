@@ -76,7 +76,7 @@ To set up this project locally:
 ### Contact Form
 - POST /api/contact - Submit a contact message.
 
-License
+## License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/js313/portfolio-be/blob/main/LICENSE) file for details.
 
 ## Contact
